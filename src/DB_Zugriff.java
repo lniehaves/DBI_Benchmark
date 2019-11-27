@@ -26,18 +26,58 @@ public class DB_Zugriff {
 		deleteDaten();
 		System.out.println("gelöscht: "+ (System.currentTimeMillis()-t1)+" ms");
 		//Fülle mit neuen Daten
+		connector.connection.setAutoCommit(false);
+		String sql = "";
+		t1 = System.currentTimeMillis();
 		//Branches
 		for(int i = 1; i<=n; i++)
 		{
-			state.executeQuery("Insert into branches(branchid,branchname,balance,address) VALUES('"+i+"','abcdefghijklmnopqrst',0,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsiudza')");
+			sql = "Insert into branches(branchid,branchname,balance,address) VALUES('"+i+"','abcdefghijklmnopqrst',0,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsiudza')";
+			state.addBatch(sql);
 		}
+		state.executeBatch();
+		connector.connection.commit();
+		state.clearBatch();
+		sql = "";
+		System.out.println("Branches Befüllt: "+ (System.currentTimeMillis()-t1)+" ms");
+		
 		
 		//Accounts
-		for(int i = 1; i<=n*100000; i++)
+		for(int i = 1; i<=n*1000; i++)
 		{
-			state.executeQuery("Insert into accounts(accid,name,balance,branchid, address) VALUES('"+i+"','aaaaaaaaaaaaaaaaaaaa',0,'"+((int)Math.random()*n+1)+"','tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')");
+			if(n%10000 == 0)
+			{
+				System.out.println(n);
+			}
+			int zahl = (int)(Math.random()*n+1);
+			sql="Insert into accounts(accid,name,balance,branchid, address) VALUES('"+i+"','aaaaaaaaaaaaaaaaaaaa',0,'"+zahl+"','tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')";
+			state.addBatch(sql);
 		}
+		state.executeBatch();
+		connector.connection.commit();
+		state.clearBatch();
+		sql = "";
 		System.out.println("Accounts Befüllt: "+ (System.currentTimeMillis()-t1)+" ms");
+	
+		//Teller
+		for(int i = 1; i<=n*1000; i++)
+		{
+			int zahl = (int)(Math.random()*n+1);
+			
+			sql="Insert into tellers(tellerid,tellername,balance,branchid, address) VALUES('"+i+"','taaaaaaaaaaaaaaaaaaa',0,'"+zahl+"','tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')";
+			state.addBatch(sql);
+		}
+		state.executeBatch();
+		connector.connection.commit();
+
+		System.out.println("Tellers Befüllt: "+ (System.currentTimeMillis()-t1)+" ms");
+		
+		//history
+		
+		System.out.println("Alle Tabellen Befüllt Befüllt: "+ (System.currentTimeMillis()-t1)+" ms");
+				
+		
+		
 		
 	}
 	
