@@ -16,6 +16,7 @@ public class DB_Zugriff {
 		
 		//Starte run
 		double t1 = System.currentTimeMillis();
+		//connect to DB
 		Connect connector = new Connect(); 
 		System.out.println(connector.connectToDB(url, database, user, pw));
 		state = connector.connection.createStatement();
@@ -27,42 +28,47 @@ public class DB_Zugriff {
 		System.out.println("gelöscht: "+ (System.currentTimeMillis()-t1)+" ms");
 		//Fülle mit neuen Daten
 		connector.connection.setAutoCommit(false);
-		PreparedStatement pState = connector.connection.prepareStatement("");
-		String sql = "";
+		//prepare statements
+		PreparedStatement pStateBranches = connector.connection.prepareStatement("Insert into branches(branchid,branchname,balance,address) VALUES(?,'abcdefghijklmnopqrst',0,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsiudza')");
+		PreparedStatement pStateAccounts = connector.connection.prepareStatement("Insert into accounts(accid,name,balance,branchid, address) VALUES(?,'aaaaaaaaaaaaaaaaaaaa',0,?,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')");
+		PreparedStatement pStateTellers = connector.connection.prepareStatement("Insert into tellers(tellerid,tellername,balance,branchid, address) VALUES(?,'taaaaaaaaaaaaaaaaaaa',0,?,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')");
+
+		//Zeit neu initialisieren
 		t1 = System.currentTimeMillis();
+		
 		//Branches
 		for(int i = 1; i<=n; i++)
 		{
-			pState = connector.connection.prepareStatement("Insert into branches(branchid,branchname,balance,address) VALUES(?,'abcdefghijklmnopqrst',0,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsiudza')");
-			pState.setInt(1,i);
-			pState.addBatch();
+			pStateBranches.setInt(1, i);
+			pStateBranches.addBatch();
 		}
+		pStateBranches.executeBatch();
 		
 		System.out.println("Branches Befüllt: "+ (System.currentTimeMillis()-t1)+" ms");
 		
-		
 		//Accounts
-		for(int i = 1; i<=n*1000; i++)
+		state.executeQuery("SET FOREIGN_KEY_CHECKS=0");
+		for(int i = 1; i<=n*100000; i++)
 		{
-			pState = connector.connection.prepareStatement("Insert into accounts(accid,name,balance,branchid, address) VALUES(?,'aaaaaaaaaaaaaaaaaaaa',0,?,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')");
-			pState.setInt(2, (int)(Math.random()*n+1)); 
-			pState.setInt(1,i);
-		
-			pState.addBatch();
+			pStateAccounts.setInt(1,i);
+			pStateAccounts.setInt(2, (int)(Math.random()*n+1)); 
+			pStateAccounts.addBatch();
 		}
+		pStateAccounts.executeBatch();
 
 		System.out.println("Accounts Befüllt: "+ (System.currentTimeMillis()-t1)+" ms");
 	
 		//Teller
-		for(int i = 1; i<=n*1000; i++)
+
+		for(int i = 1; i<=n*100000; i++)
 		{
-			pState = connector.connection.prepareStatement("Insert into tellers(tellerid,tellername,balance,branchid, address) VALUES(?,'taaaaaaaaaaaaaaaaaaa',0,?,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')");
-			pState.setInt(2, (int)(Math.random()*n+1)); 
-			pState.setInt(1,i);
-			
-			pState.addBatch();
+			pStateTellers.setInt(1,i);
+			pStateTellers.setInt(2, (int)(Math.random()*n+1)); 
+			pStateTellers.addBatch();
 		}
-		pState.executeBatch();
+		pStateTellers.executeBatch();
+		
+		//batches commiten
 		connector.connection.commit();
 
 		System.out.println("Tellers Befüllt: "+ (System.currentTimeMillis()-t1)+" ms");
