@@ -58,24 +58,27 @@ public class DB_Zugriff {
 		state.executeQuery("SET FOREIGN_KEY_CHECKS=0");
 		
 		try {
-			AccountThread aT1 = new AccountThread();
-			 Thread zwei = new Thread(aT1,"zwei");
-			Thread drei = new Thread(aT1,"drei");
-			Thread vier = new Thread(aT1,"vier");
-			Thread funf = new Thread(aT1,"funf");
-			Thread sechs = new Thread(aT1,"sechs");
-			Thread sieben = new Thread(aT1,"sieben");
-			Thread acht = new Thread(aT1,"acht");
+			AccountThread aT1 = new AccountThread(1,125000);
+			AccountThread aT2 = new AccountThread(125001,250000);
+			AccountThread aT3 = new AccountThread(250001,375000);
+			AccountThread aT4 = new AccountThread(375001,500000);
+			AccountThread aT5 = new AccountThread(500001,625000);
+			AccountThread aT6 = new AccountThread(625001,750000);
+			AccountThread aT7 = new AccountThread(750001,875000);
+			AccountThread aT8 = new AccountThread(875001,1000000);
+			
 			
 			state.executeQuery("SET FOREIGN_KEY_CHECKS=0");
-			zwei.start();
-			drei.start();
-			vier.start();
-			funf.start();
-			sechs.start();
-			sieben.start();
-			acht.start();
-			aT1.run();
+
+			aT1.start();
+			aT2.start();
+			aT3.start();
+			aT4.start();
+			aT5.start();
+			aT6.start();
+			aT7.start();
+			aT8.start();
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace(); 

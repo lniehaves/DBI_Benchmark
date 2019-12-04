@@ -1,12 +1,20 @@
 import java.sql.*;
 
-public class AccountThread implements Runnable{
+public class AccountThread extends Thread{
 
 	String url = "localhost";
 	String database = "dbi_benchmark";
 	String user = "root";
 	String pw = "root";
-	int n = 10;
+	private int n = 10;
+	private int j;
+	int k;
+	
+	public AccountThread(int j, int k)
+	{
+		this.j=j;
+		this.k=k;
+	}
 	
 	public void run()
 	{
@@ -17,12 +25,10 @@ public class AccountThread implements Runnable{
 			Connect connector = new Connect();
 			connector.connectToDB(url, database, user, pw);
 			Statement state = connector.connection.createStatement();
-			
-			PreparedStatement pState = connector.connection.prepareStatement("Insert into accounts(accid,name,balance,branchid, address) VALUES(?,'aaaaaaaaaaaaaaaaaaaa',0,?,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')");
 			state.executeQuery("SET FOREIGN_KEY_CHECKS=0");
-			for(int i =1 ;i<=n*1000;i++)
+			PreparedStatement pState = connector.connection.prepareStatement("Insert into accounts(accid,name,balance,branchid, address) VALUES(?,'aaaaaaaaaaaaaaaaaaaa',0,?,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')");		
+			for(int i = j;i<=k;i++)
 			{
-//				System.out.println(thread+""+ i);
 				pState.setInt(1, i);
 				pState.setInt(2, (int)(Math.random()*n+1));
 				pState.executeQuery();
