@@ -16,9 +16,10 @@ public class AccountThread implements Runnable{
 			
 			Connect connector = new Connect();
 			connector.connectToDB(url, database, user, pw);
-			
+			Statement state = connector.connection.createStatement();
 			
 			PreparedStatement pState = connector.connection.prepareStatement("Insert into accounts(accid,name,balance,branchid, address) VALUES(?,'aaaaaaaaaaaaaaaaaaaa',0,?,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')");
+			state.executeQuery("SET FOREIGN_KEY_CHECKS=0");
 			for(int i =1 ;i<=n*1000;i++)
 			{
 //				System.out.println(thread+""+ i);

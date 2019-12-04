@@ -20,11 +20,10 @@ public class DB_Zugriff {
 		
 		//Starte run
 		double t1 = System.currentTimeMillis();
-<<<<<<< Updated upstream
-=======
+
 		
 		//connect to DB
->>>>>>> Stashed changes
+
 		Connect connector = new Connect(); 
 		System.out.println(connector.connectToDB(url, database, user, pw));
 		state = connector.connection.createStatement();
@@ -36,41 +35,28 @@ public class DB_Zugriff {
 		
 		//starte befuellen
 		connector.connection.setAutoCommit(false);
-<<<<<<< Updated upstream
 		PreparedStatement pState = connector.connection.prepareStatement("");
 		String sql = "";
-=======
+
 		
 		//Zeit neu initialisieren
->>>>>>> Stashed changes
 		t1 = System.currentTimeMillis();
 		//Branches
 		for(int i = 1; i<=n; i++)
 		{
-<<<<<<< Updated upstream
+
 			pState = connector.connection.prepareStatement("Insert into branches(branchid,branchname,balance,address) VALUES(?,'abcdefghijklmnopqrst',0,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsiudza')");
 			pState.setInt(1,i);
 			pState.addBatch();
 		}
 		
-=======
-			state.executeQuery("Insert into branches(branchid,branchname,balance,address) VALUES('"+i+"','abcdefghijklmnopqrst',0,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsiudza')");
-		}
->>>>>>> Stashed changes
+
 		System.out.println("Branches Befüllt: "+ (System.currentTimeMillis()-t1)+" ms");
 		
 		
 		//Accounts
-<<<<<<< Updated upstream
-		for(int i = 1; i<=n*1000; i++)
-		{
-			pState = connector.connection.prepareStatement("Insert into accounts(accid,name,balance,branchid, address) VALUES(?,'aaaaaaaaaaaaaaaaaaaa',0,?,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')");
-			pState.setInt(2, (int)(Math.random()*n+1)); 
-			pState.setInt(1,i);
+		state.executeQuery("SET FOREIGN_KEY_CHECKS=0");
 		
-			pState.addBatch();
-		}
-=======
 		try {
 			AccountThread aT1 = new AccountThread();
 			 Thread zwei = new Thread(aT1,"zwei");
@@ -96,22 +82,15 @@ public class DB_Zugriff {
 		}
 		
 		
->>>>>>> Stashed changes
+
 
 		System.out.println("Accounts Befüllt: "+ (System.currentTimeMillis()-t1)+" ms");
 	
 		//Teller
-<<<<<<< Updated upstream
-		for(int i = 1; i<=n*1000; i++)
-		{
-			pState = connector.connection.prepareStatement("Insert into tellers(tellerid,tellername,balance,branchid, address) VALUES(?,'taaaaaaaaaaaaaaaaaaa',0,?,'tdduzstiduzsidgsdiucgoxyuiztcyxhgcoisazdioasgduzgasIUAgsiuaTSIUDatsi')");
-			pState.setInt(2, (int)(Math.random()*n+1)); 
-			pState.setInt(1,i);
-			
-			pState.addBatch();
-		}
-		pState.executeBatch();
-=======
+
+		
+
+
 		/*
 		for(int i = 1; i<=n*100000; i++)
 		{
@@ -122,7 +101,7 @@ public class DB_Zugriff {
 		
 		System.out.println("Alle Batches executet "+ (System.currentTimeMillis()-t1)+" ms");
 		//batches commiten
->>>>>>> Stashed changes
+
 		connector.connection.commit();
 
 		
